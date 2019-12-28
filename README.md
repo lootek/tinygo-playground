@@ -1,4 +1,4 @@
-# tinygo-playground
+# TinyGo + Arduino Nano 33 IoT
 
 ## 1. [Shift register](shift-register)
 
