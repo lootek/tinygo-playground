@@ -26,7 +26,7 @@ func main() {
 		led.Low()
 
 		trigger.High()
-		time.Sleep(time.Microsecond * 100)
+		time.Sleep(time.Microsecond * 10)
 		trigger.Low()
 
 		eDur := 0
