@@ -17,63 +17,48 @@ func main() {
 	echo := machine.D3
 	echo.Configure(machine.PinConfig{Mode: machine.PinOutput})
 
-	out := machine.D2
-	out.Configure(machine.PinConfig{Mode: machine.PinOutput})
-
-	time.Sleep(time.Second * 5)
-	println("start")
+	//time.Sleep(time.Second * 5)
+	//println("start")
 
 	for {
-		trigger.Configure(machine.PinConfig{Mode: machine.PinInput})
-		trigger.High()
-		time.Sleep(time.Microsecond * 10)
-		trigger.Low()
-		trigger.Configure(machine.PinConfig{Mode: machine.PinOutput})
-
-		for {
-			time.Sleep(time.Microsecond)
-
-			if out.Get() {
-				println("out")
-			}
-			if echo.Get() {
-				println("echo")
-			}
-			if trigger.Get() {
-				println("trigger")
-			}
-		}
-
-		//eDur := 0
-		//for {
-		//	if !echo.Get() {
-		//		if eDur == 0 {
-		//			println("c")
-		//			continue
-		//		}
-		//
-		//		println("b")
-		//		break
-		//	}
-		//
-		//	println("++")
-		//	eDur++
-		//	time.Sleep(time.Microsecond)
-		//}
-		//
-		////eDur = 5 * eDur / 58
-		//println(eDur)
-
-		//for i := 0; i < eDur; i++ {
-		//	led.High()
-		//	time.Sleep(time.Millisecond * 100)
-		//	led.Low()
-		//	time.Sleep(time.Millisecond * 100)
-		//}
-
-		time.Sleep(time.Second * 5)
 		led.High()
 		time.Sleep(time.Millisecond * 500)
 		led.Low()
+
+		trigger.High()
+		time.Sleep(time.Microsecond * 100)
+		trigger.Low()
+
+		eDur := 0
+		cnt := 0
+		for {
+			cnt++
+			if cnt > 50*1000 {
+				break
+			}
+
+			if !echo.Get() {
+				if eDur == 0 {
+					continue
+				}
+
+				break
+			}
+
+			eDur++
+			time.Sleep(time.Microsecond)
+		}
+
+		eDur = eDur / 58
+		println(eDur)
+
+		for i := 0; i < eDur/10; i++ {
+			led.High()
+			time.Sleep(time.Millisecond * 200)
+			led.Low()
+			time.Sleep(time.Millisecond * 200)
+		}
+
+		time.Sleep(time.Second * 5)
 	}
 }
